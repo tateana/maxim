@@ -1,12 +1,5 @@
 {
   "projects": {
     "default": "maxim-6366b"
-  },
-  "hosting": {
-  "rewrites": [ {
-      "source": "/oxford/*",
-      "destination": "https://od-api.oxforddictionaries.com/api/v1/inflections/de/busch"
-    } 
-  ]
-}
+  }
 }
