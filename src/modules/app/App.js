@@ -6,6 +6,7 @@ import Menu from "./Menu"
 import Dashboard from "../../components/Dashboard"
 
 import Dictionary from "../dictionary"
+import Articles from "../learning"
 
 class App extends Component {
     constructor(props) {
@@ -16,12 +17,12 @@ class App extends Component {
     render() {
         const toolbar = <Toolbar>
             <Typography variant="title" color="inherit" noWrap>
-                Maxim
+                Maxim Lingvo
             </Typography>
         </Toolbar>;
         return (
             <Dashboard toolbar={toolbar} menu={<Menu />} >
-                {<Dictionary />}
+                {<Articles />}
             </Dashboard>
         )
     }

@@ -8,16 +8,9 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "redirects": [
-      {
-        "source": "/oxford/*",
-        "destination": "https://od-api.oxforddictionaries.com/api/v1/inflections/de/busch",
-        "type": 302
-      }
     ]
   },
-  "functions": {
+  "_functions": {
     "predeploy": [
       "npm --prefix \"functions\" run lint"
     ]

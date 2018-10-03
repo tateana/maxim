@@ -24,4 +24,14 @@ export default class Score {
         return this._word
     }
 
+    decrement() {
+        this._count = 0
+        return this._count;
+    }
+
+    increment() {
+        this._count += 1;
+        return this._count;
+    }
+
 }

@@ -64,6 +64,17 @@ class FireService {
         )
     }
 
+    fetchNouns(limit = 50) {
+        return from(
+            this.getCollection(FireService.COLLECTION_NOUNS)
+                .limit(limit).get()
+                .then((querySnapshot) => querySnapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return new Noun(data.de, null, data.gender, data.ru)
+                }))
+        )
+    }
+
     addNoun(noun) {
         return from(this.getCollection(FireService.COLLECTION_NOUNS)
             .doc(noun.de)
