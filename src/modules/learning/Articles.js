@@ -19,7 +19,7 @@ class Articles extends Component {
     }
 
     componentDidMount() {
-        dbService.fetchNouns(10)
+        dbService.fetchNouns()
             .subscribe({
                 next: (nouns) => this.setState({ nouns }),
                 error: error => this.setState({ newNoun: false, error }),

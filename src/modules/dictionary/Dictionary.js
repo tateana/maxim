@@ -30,7 +30,7 @@ class Dictionary extends Component {
             })
         ).subscribe({
             next: (noun) => this.setState({ newNoun: noun }),
-            error: error => this.setState({ newNoun: false, error }),
+            error: error => { console.log(error); this.setState({ newNoun: false }) },
             complete: () => console.log('done'),
         });
     };

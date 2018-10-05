@@ -1,4 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
@@ -7,25 +9,25 @@ import Dashboard from "../../components/Dashboard"
 
 import Dictionary from "../dictionary"
 import Articles from "../learning"
+import Error404 from "./Error404"
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { aaa: true }
-    }
-
-    render() {
-        const toolbar = <Toolbar>
-            <Typography variant="title" color="inherit" noWrap>
-                Maxim Lingvo
-            </Typography>
-        </Toolbar>;
-        return (
+const App = () => {
+    const toolbar = <Toolbar>
+        <Typography variant="title" color="inherit" noWrap>
+            Maxim Lingvo
+        </Typography>
+    </Toolbar>;
+    return (
+        <Router>
             <Dashboard toolbar={toolbar} menu={<Menu />} >
-                {<Articles />}
+                <Switch>
+                    <Route exact path="/" component={Dictionary} />
+                    <Route path="/learning/articles" component={Articles} />
+                    <Route component={Error404} />
+                </Switch>
             </Dashboard>
-        )
-    }
+        </Router>
+    )
 }
 
 export default App;

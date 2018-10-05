@@ -34,7 +34,6 @@ class ArticleQuestion extends Component {
     }
 
     handleAnswerSelected = (event) => {
-        console.log(event.currentTarget)
         this.setState({ selectedAnswer: event.currentTarget.value });
     }
 
@@ -52,7 +51,7 @@ class ArticleQuestion extends Component {
     render() {
         const { noun } = this.props
         const { selectedAnswer } = this.state
-        console.log(selectedAnswer)
+        console.log('render ArticleQuestion')
         return (
             <Page>
                 <Grid container alignItems='center'>

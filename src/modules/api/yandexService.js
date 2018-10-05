@@ -50,7 +50,7 @@ class YandexService {
                     }
 
                     if (response.response.def.length === 0) {
-                        return throwError('Nothing Found')
+                        throwError('Nothing Found')
                     }
 
                     const { text, gen, tr } = response.response.def[0]
@@ -58,8 +58,7 @@ class YandexService {
                 }
 
                 return throwError(response)
-            }),
-            catchError(error => throwError(error.response))
+            })
         );
     }
 }

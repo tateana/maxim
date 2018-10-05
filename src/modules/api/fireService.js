@@ -4,6 +4,7 @@ import pick from 'lodash.pick';
 import upperFirst from 'lodash.upperfirst';
 import { from } from 'rxjs/index';
 import Noun from './Noun';
+import Score from './Score';
 
 const config = {
     apiKey: process.env.REACT_APP_FIREBASE_KEY,
@@ -64,13 +65,24 @@ class FireService {
         )
     }
 
-    fetchNouns(limit = 50) {
+    fetchNouns(limit = 100) {
         return from(
             this.getCollection(FireService.COLLECTION_NOUNS)
                 .limit(limit).get()
                 .then((querySnapshot) => querySnapshot.docs.map(doc => {
                     const data = doc.data();
                     return new Noun(data.de, null, data.gender, data.ru)
+                }))
+        )
+    }
+
+    fetchScores(limit = 100) {
+        return from(
+            this.getCollection(FireService.COLLECTION_ARTICLES)
+                .limit(limit).get()
+                .then((querySnapshot) => querySnapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return new Score(doc.id, data.count)
                 }))
         )
     }

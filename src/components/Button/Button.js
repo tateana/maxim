@@ -23,6 +23,9 @@ const styles = theme => ({
         backgroundColor: green[500],
         '&:hover': {
             backgroundColor: green[600],
+            '&$disabled': {
+                background: green[400],
+            }
         },
         '&$disabled': {
             background: green[400],
@@ -35,6 +38,9 @@ const styles = theme => ({
         backgroundColor: orange[500],
         '&:hover': {
             backgroundColor: orange[600],
+            '&$disabled': {
+                background: orange[400],
+            }
         },
         '&$disabled': {
             background: orange[400],
@@ -42,7 +48,9 @@ const styles = theme => ({
         },
     },
 
-    disabled: {},
+    disabled: {
+        color: orange[600]
+    },
 });
 
 const Button = (props) => {
