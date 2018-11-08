@@ -4,6 +4,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { withStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom'
+import { inherits } from 'util';
 
 const styles = (theme) => ({
     'root': {
@@ -13,8 +14,9 @@ const styles = (theme) => ({
     },
 
     'selected': {
+        cursor: 'default',
         '&, &:hover': {
-            backgroundColor: theme.palette.grey[300],
+            backgroundColor: theme.palette.action.disabledBackground
         }
     }
 });

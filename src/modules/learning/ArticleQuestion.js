@@ -51,17 +51,16 @@ class ArticleQuestion extends Component {
     render() {
         const { noun } = this.props
         const { selectedAnswer } = this.state
-        console.log('render ArticleQuestion')
         return (
             <Page>
                 <Grid container alignItems='center'>
-                    <Grid item xs={4} md={3}>
+                    <Grid item xs={6} sm={4} md={3}>
                         {_map(Noun.genders,
                             (article, gender) => <ListItem key={gender}>
                                 <Button variant="contained" value={gender} id={gender} onClick={this.handleAnswerSelected} disabled={!!this.state.selectedAnswer} state={this.getAnswerState(gender)} >{article} </Button>
                             </ListItem>)}
                     </Grid>
-                    <Grid item xs={4} md={7}>
+                    <Grid item xs={6} sm={8} md={7}>
                         <Typography variant="headline">{noun.origin} </Typography>
                         <Typography variant="caption"> {noun.translate} </Typography>
                     </Grid>
