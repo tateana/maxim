@@ -3,10 +3,11 @@ import _map from 'lodash.map'
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
-import { Score, Noun } from '../api'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
+import { Noun } from '../api'
 import Button from '../../components/Button';
-
-import Page from '../../components/Page';
+import { answer } from './actions'
 
 class ArticleQuestion extends Component {
 
@@ -17,16 +18,16 @@ class ArticleQuestion extends Component {
         };
     }
 
-    getAnswerState(answer) {
+    getAnswerState(selectedAnswer) {
         if (!this.state.selectedAnswer) {
             return 'none'
         }
 
-        if (answer === this.props.noun.gender) {
+        if (selectedAnswer === this.props.task.noun.gender) {
             return 'success'
         }
 
-        if (answer === this.state.selectedAnswer) {
+        if (selectedAnswer === this.state.selectedAnswer) {
             return 'error'
         }
 
@@ -38,21 +39,15 @@ class ArticleQuestion extends Component {
     }
 
     handleNextClick = () => {
-        const score = this.props.currentScore || new Score(this.props.noun.origin, 0)
-        if (this.state.selectedAnswer === this.props.noun.gender) {
-            score.increment()
-        } else {
-            score.decrement();
-        }
-        this.props.onScoreChange(score)
+        this.props.answer(this.props.task.score, this.state.selectedAnswer === this.props.task.noun.gender)
         this.setState({ selectedAnswer: null });
     }
 
     render() {
-        const { noun } = this.props
+        const { noun } = this.props.task
         const { selectedAnswer } = this.state
         return (
-            <Page>
+            <React.Fragment>
                 <Grid container alignItems='center'>
                     <Grid item xs={6} sm={4} md={3}>
                         {_map(Noun.genders,
@@ -66,14 +61,27 @@ class ArticleQuestion extends Component {
                     </Grid>
                 </Grid>
                 {
-                    this.state.selectedAnswer &&
+                    selectedAnswer &&
                     <Grid container justify="flex-end">
                         <Button variant="contained" color="primary" onClick={this.handleNextClick} >Next</Button>
                     </Grid>
                 }
-            </Page>
+            </React.Fragment>
         );
     }
 }
 
-export default ArticleQuestion; 
+ArticleQuestion.propTypes = {
+    task: PropTypes.shape({
+        score: PropTypes.instanceOf(Object),
+        noun: PropTypes.instanceOf(Object)
+    }).isRequired,
+    answer: PropTypes.func.isRequired
+};
+
+const mapStateToProps = ({ articleTasks, dictionary }) => {
+    const taskId = articleTasks[0]
+    return { task: { score: dictionary[taskId].articleScore, noun: dictionary[taskId].word } }
+}
+
+export default connect(mapStateToProps, { answer })(ArticleQuestion); 

@@ -3,6 +3,8 @@
 
 export default class Noun {
 
+    static _entityType = 'word'
+
     static genders = {
         'm': 'der',
         'f': 'die',
@@ -15,6 +17,15 @@ export default class Noun {
         this._ruOptions = ruOptions
         this._ru = ru || ruOptions[0]
         this._gender = gender
+        this._isModified = false;
+    }
+
+    static get entityType() {
+        return Noun._entityType;
+    }
+
+    get id() {
+        return this._de
     }
 
     get created() {
@@ -65,5 +76,17 @@ export default class Noun {
         return this._ruOptions && this._ruOptions.length > 0
     }
 
+    get isModified() {
+        return this._isModified
+    }
+
+    doModified() {
+        this._isModified = true
+    }
+
+    synced() {
+        this._isModified = false
+        return this;
+    }
 
 }

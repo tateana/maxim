@@ -1,0 +1,200 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dictionary flow dispatches the correct action and payload Find Item word and its score are found in database 1`] = `
+Array [
+  Object {
+    "payload": "busch",
+    "type": "DICTIONARY_ITEM_FIND",
+  },
+  Object {
+    "payload": "busch",
+    "type": "FETCH_WORD",
+  },
+  Object {
+    "payload": Array [
+      Noun {
+        "_de": "Busch",
+        "_gender": "m",
+        "_isModified": false,
+        "_ru": "куст",
+        "_ruOptions": null,
+      },
+      Score {
+        "_count": 2,
+        "_isModified": false,
+        "_viewed": null,
+        "_word": "Busch",
+      },
+    ],
+    "type": "FETCH_WORD_SUCCESS",
+  },
+  Object {
+    "payload": Object {
+      "Busch": Object {
+        "articleScore": Score {
+          "_count": 2,
+          "_isModified": false,
+          "_viewed": null,
+          "_word": "Busch",
+        },
+        "word": Noun {
+          "_de": "Busch",
+          "_gender": "m",
+          "_isModified": false,
+          "_ru": "куст",
+          "_ruOptions": null,
+        },
+      },
+    },
+    "type": "DICTIONARY_UPDATED",
+  },
+  Object {
+    "payload": "Busch",
+    "type": "DICTIONARY_ITEM_FOUND",
+  },
+]
+`;
+
+exports[`dictionary flow dispatches the correct action and payload Find Item word is found in Yandex 1`] = `
+Array [
+  Object {
+    "payload": "fenster",
+    "type": "DICTIONARY_ITEM_FIND",
+  },
+  Object {
+    "payload": "fenster",
+    "type": "FETCH_WORD",
+  },
+  Object {
+    "payload": Array [
+      Noun {
+        "_de": "Fenster",
+        "_gender": "n",
+        "_isModified": false,
+        "_ru": "окно",
+        "_ruOptions": Array [
+          "окно",
+        ],
+      },
+    ],
+    "type": "FETCH_WORD_SUCCESS",
+  },
+  Object {
+    "payload": Object {
+      "Busch": Object {
+        "articleScore": Score {
+          "_count": 2,
+          "_isModified": false,
+          "_viewed": null,
+          "_word": "Busch",
+        },
+        "word": Noun {
+          "_de": "Busch",
+          "_gender": "m",
+          "_isModified": false,
+          "_ru": "куст",
+          "_ruOptions": null,
+        },
+      },
+      "Fenster": Object {
+        "word": Noun {
+          "_de": "Fenster",
+          "_gender": "n",
+          "_isModified": false,
+          "_ru": "окно",
+          "_ruOptions": Array [
+            "окно",
+          ],
+        },
+      },
+    },
+    "type": "DICTIONARY_UPDATED",
+  },
+  Object {
+    "payload": "Fenster",
+    "type": "DICTIONARY_ITEM_FOUND",
+  },
+]
+`;
+
+exports[`dictionary flow dispatches the correct action and payload Find Item word is not found in any source 1`] = `
+Array [
+  Object {
+    "payload": "Buch",
+    "type": "DICTIONARY_ITEM_FIND",
+  },
+  Object {
+    "payload": "Buch",
+    "type": "FETCH_WORD",
+  },
+  Object {
+    "payload": "Buch",
+    "type": "FETCH_WORD_NOT_FOUND",
+  },
+  Object {
+    "payload": false,
+    "type": "DICTIONARY_ITEM_FOUND",
+  },
+]
+`;
+
+exports[`dictionary flow dispatches the correct action and payload Save Dict Items flow dispatches the correct action and payload items saved successfully 1`] = `
+Array [
+  Object {
+    "payload": Array [
+      Score {
+        "_count": 2,
+        "_isModified": true,
+        "_viewed": null,
+        "_word": "Busch",
+      },
+    ],
+    "type": "DICTIONARY_ITEMS_SAVE",
+  },
+  Object {
+    "payload": Array [
+      Score {
+        "_count": 2,
+        "_isModified": true,
+        "_viewed": null,
+        "_word": "Busch",
+      },
+    ],
+    "type": "DICTIONARY_UPDATE",
+  },
+  Object {
+    "payload": Object {
+      "Busch": Object {
+        "articleScore": Score {
+          "_count": 2,
+          "_isModified": true,
+          "_viewed": null,
+          "_word": "Busch",
+        },
+        "word": Noun {
+          "_de": "Busch",
+          "_gender": "m",
+          "_isModified": false,
+          "_ru": "куст",
+          "_ruOptions": null,
+        },
+      },
+      "Fenster": Object {
+        "word": Noun {
+          "_de": "Fenster",
+          "_gender": "n",
+          "_isModified": false,
+          "_ru": "окно",
+          "_ruOptions": Array [
+            "окно",
+          ],
+        },
+      },
+    },
+    "type": "DICTIONARY_UPDATED",
+  },
+  Object {
+    "type": "DICTIONARY_SYNC",
+  },
+]
+`;

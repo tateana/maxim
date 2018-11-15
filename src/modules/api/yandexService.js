@@ -1,6 +1,6 @@
 import { ajax as rxjsAjax } from 'rxjs/ajax';
-import { map, catchError } from 'rxjs/operators';
-import { throwError, from } from 'rxjs/index';
+import { map } from 'rxjs/operators';
+import { from } from 'rxjs/index';
 import Noun from './Noun'
 
 
@@ -20,11 +20,11 @@ class YandexService {
         this.ajax = ajax;
     }
 
-    findTest() {
-        const { text, gen, tr } = YandexService.def
+    // findTest() {
+    //     const { text, gen, tr } = YandexService.def
 
-        return from([new Noun(text, tr.map(meta => meta.text), gen)])
-    }
+    //     return from([new Noun(text, tr.map(meta => meta.text), gen)])
+    // }
 
     find(query) {
         const headers = {
@@ -43,21 +43,20 @@ class YandexService {
 
         return this.ajax(request).pipe(
             map(response => {
-                console.log(response)
                 if (response.status === 200) {
                     if (!response.response || !response.response.def) {
-                        return throwError('No Result')
+                        throw new Error('No Yandex Result')
                     }
 
                     if (response.response.def.length === 0) {
-                        throwError('Nothing Found')
+                        return false
                     }
 
                     const { text, gen, tr } = response.response.def[0]
                     return new Noun(text, tr.map(meta => meta.text), gen)
                 }
 
-                return throwError(response)
+                throw new Error('Yandex Response Status is not 200')
             })
         );
     }

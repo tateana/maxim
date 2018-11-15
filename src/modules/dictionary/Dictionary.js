@@ -1,55 +1,29 @@
 import React, { Component } from "react";
-import { mergeMap } from 'rxjs/operators';
-import { of } from 'rxjs/index';
-
-import dictService, { dbService, Noun } from '../api'
-
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types';
 import Page from '../../components/Page';
-import NounForm from './NounForm'
+import DictionaryForm from './DictionaryForm'
 import Search from './Search';
-import NounList from './NounList';
+import { findItem } from './actions'
 
 
 class Dictionary extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            newNoun: new Noun('Test', null, 'm', 'TestRu'),
-            savedNouns: [new Noun('Test1', null, 'm', 'TestRu1')]
-        };
-    }
 
     handleSearch = (term) => {
-        const observable = dbService.fetchNounExact(term)
-        observable.pipe(
-            mergeMap(noun => {
-                if (noun) {
-                    return of(noun)
-                }
-                return dictService.find(term)
-            })
-        ).subscribe({
-            next: (noun) => this.setState({ newNoun: noun }),
-            error: error => { console.log(error); this.setState({ newNoun: false }) },
-            complete: () => console.log('done'),
-        });
+        this.props.findItem(term)
     };
 
-    handleSaving = (noun) => {
-        this.setState(prevState => ({
-            savedNouns: prevState.savedNouns.concat([noun]),
-            newNoun: null
-        }));
-    };
 
     render() {
-        const { newNoun, error } = this.state
+
+        const { dictItem, error } = this.props
         let searchResult = null
-        if (newNoun) {
-            searchResult = <NounForm key={newNoun.origin} noun={newNoun} onSaved={this.handleSaving} />
+
+        if (dictItem) {
+            searchResult = <DictionaryForm key={dictItem.word.id} task={dictItem} />
         }
 
-        if (newNoun === false) {
+        if (dictItem === false) {
             searchResult = <Page>nothing found {error}</Page>
         }
 
@@ -57,10 +31,22 @@ class Dictionary extends Component {
             <div>
                 <Search value="" onSearch={this.handleSearch} />
                 {searchResult}
-                {this.state.savedNouns.length > 0 && <NounList nouns={this.state.savedNouns} />}
             </div>
         );
     }
 }
 
-export default Dictionary; 
+Dictionary.defaultProps = {
+    dictItem: null,
+    error: false
+}
+
+Dictionary.propTypes = {
+    dictItem: PropTypes.instanceOf(Object),
+    findItem: PropTypes.func.isRequired,
+    error: PropTypes.oneOf([false, PropTypes.string])
+};
+
+const mapStateToProps = ({ dictionary, dictionaryWord }) => ({ dictItem: dictionaryWord ? dictionary[dictionaryWord] : dictionaryWord })
+
+export default connect(mapStateToProps, { findItem })(Dictionary); 

@@ -8,59 +8,69 @@ import Grid from '@material-ui/core/Grid';
 import ArrowIcon from '@material-ui/icons/ArrowRightAlt';
 import { connect } from 'react-redux'
 import Hidden from "@material-ui/core/Hidden";
-import FormLabel from '@material-ui/core/FormLabel';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Page from '../../components/Page';
 import Button from '../../components/Button';
-import { dbService, Noun, Score } from '../api'
-import { saveWord } from './actions'
+import { Noun, Score } from '../api'
+import { saveEntities } from './actions'
 
 
-class NounForm extends Component {
+class DictionaryForm extends Component {
     constructor(props) {
         super(props);
 
-        const { noun } = props
+        const noun = props.task.word
         this.state = {
+            origin: noun.origin,
             gender: noun.gender,
             translate: noun.translate,
-            learning: null,
-            loading: false
+            hasArticleScore: Boolean(props.task.articleScore),
+            hasSpellScore: Boolean(props.task.spellScore),
+            saveValue: 'Update',
+            toSaveNoun: noun.isWritable,
+            toSaveArticleScore: false,
+            toSaveSpellScore: false,
+            isWritable: noun.isWritable,
+            translates: noun.translates
         };
     }
 
     handleChange = event => {
-        this.setState({ [event.target.name]: event.target.value });
+        this.setState({ [event.target.name]: event.target.value, toSaveNoun: true, saveValue: 'Update' });
     };
 
-    handleSaveNoun = () => {
-        const { noun } = this.props;
-        noun.translate = this.state.translate
-        noun.gender = this.state.gender
-        this.props.saveWord(noun)
-        // dbService.addNoun(noun)
-        // this.handleSaveScore()
+    handleLearningChange = event => {
+        this.setState({ [`has${event.target.name}`]: event.target.checked, [`toSave${event.target.name}`]: true, saveValue: 'Update' });
     };
 
-    handleSaveScore = () => {
-        dbService.addArticleScore(new Score(this.props.noun.origin)).subscribe({
-            next: () => {
-                this.props.onSaved(this.props.noun)
-            }
-        });
+    handleSaveClick = () => {
+        const toSave = []
+        if (this.state.toSaveNoun) {
+            const { origin, gender, translate } = this.state
+            const noun = new Noun(origin, null, gender, translate)
+            noun.doModified()
+            toSave.push(noun)
+        }
+
+        if (this.state.toSaveArticleScore) {
+            const score = new Score(this.state.origin);
+            score.doModified()
+            toSave.push(score)
+        }
+
+        this.props.saveEntities(toSave)
+        this.setState({ saveValue: 'Updated', toSaveNoun: false, toSaveArticleScore: false, toSaveSpellScore: false, isWritable: false })
     }
 
     render() {
-        const { gender, translate, loading } = this.state
-        const { noun } = this.props
-        console.log(noun.isWritable)
+        const { gender, translate, saveValue, isWritable, hasArticleScore, hasSpellScore, toSaveNoun, toSaveArticleScore, toSaveSpellScore, origin, translates } = this.state
         return (
             <Page>
                 <Grid container spacing={24} alignItems='center'>
                     <Grid item xs={12} md={2}>
-                        <FormControl fullWidth margin="normal" disabled={!noun.isWritable}>
+                        <FormControl fullWidth margin="normal" disabled={!isWritable}>
                             <Select
                                 value={gender}
                                 onChange={this.handleChange}
@@ -78,7 +88,7 @@ class NounForm extends Component {
                         <TextField
                             disabled
                             id="origin"
-                            defaultValue={noun.origin}
+                            defaultValue={origin}
                             margin="normal"
                             fullWidth />
                     </Grid>
@@ -91,13 +101,13 @@ class NounForm extends Component {
                         <FormControl fullWidth margin="normal">
                             <Select
                                 value={translate}
-                                disabled={!noun.isWritable}
+                                disabled={!isWritable}
                                 onChange={this.handleChange}
                                 inputProps={{
                                     name: 'translate',
                                     id: 'translate',
                                 }}>
-                                {noun.translates.map((word) => <MenuItem key={word} value={word}>{word}</MenuItem>)}
+                                {translates.map((translateOption) => <MenuItem key={translateOption} value={translateOption}>{translateOption}</MenuItem>)}
                             </Select>
                         </FormControl>
                     </Grid>
@@ -105,16 +115,12 @@ class NounForm extends Component {
                 <Grid container justify="space-between">
                     <FormControl component="fieldset" margin='normal'>
                         <FormGroup row>
-                            <FormControlLabel control={<Checkbox checked={!noun.isWritable} onChange={this.handleChange} name='learning' value="article" color="default" />} label="learn articles" />
-                            <FormControlLabel control={<Checkbox checked={!noun.isWritable} onChange={this.handleChange} name='learning' value="spelling" color="default" />} label="learn spelling" />
+                            <FormControlLabel control={<Checkbox checked={hasArticleScore} onChange={this.handleLearningChange} name='ArticleScore' color="default" />} label="learn articles" />
+                            <FormControlLabel control={<Checkbox checked={hasSpellScore} onChange={this.handleLearningChange} name='SpellScore' color="default" />} label="learn spelling" />
                         </FormGroup>
                     </FormControl>
                     <FormControl margin='normal'>
-                        {
-                            noun.isWritable
-                                ? <Button variant="contained" color="primary" loading={loading} onClick={this.handleSaveNoun}>Save in the dictionary and learn later</Button>
-                                : <Button variant="contained" color="primary" loading={loading} onClick={this.handleSaveScore}>Learn later </Button>
-                        }
+                        <Button variant="contained" color="primary" onClick={this.handleSaveClick} disabled={!(toSaveNoun || toSaveArticleScore || toSaveSpellScore)}>{saveValue}</Button>
                     </FormControl>
                 </Grid>
             </Page>
@@ -122,10 +128,14 @@ class NounForm extends Component {
     }
 }
 
-NounForm.propTypes = {
-    noun: PropTypes.instanceOf(Noun).isRequired,
-    saveWord: PropTypes.func.isRequired
 
+DictionaryForm.propTypes = {
+    task: PropTypes.shape({
+        articleScore: PropTypes.instanceOf(Score),
+        spellScore: PropTypes.instanceOf(Score),
+        word: PropTypes.instanceOf(Noun).isRequired
+    }).isRequired,
+    saveEntities: PropTypes.func.isRequired
 };
 
-export default connect(null, { saveWord })(NounForm); 
+export default connect(null, { saveEntities })(DictionaryForm); 

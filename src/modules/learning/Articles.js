@@ -1,55 +1,47 @@
 import React, { Component } from "react";
 
-import sample from 'lodash.sample'
-
 import Typography from '@material-ui/core/Typography';
-import { dbService } from '../api'
+import { connect } from 'react-redux'
 
 import Page from '../../components/Page';
 import ArticleQuestion from './ArticleQuestion'
+import Button from '../../components/Button';
+import { load } from './actions'
 
 class Articles extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            scores: {},
-            nouns: [],
-            totalScore: 0
-        };
-    }
 
     componentDidMount() {
-        dbService.fetchNouns()
-            .subscribe({
-                next: (nouns) => this.setState({ nouns }),
-                error: error => this.setState({ newNoun: false, error }),
-                complete: () => console.log('done'),
-            });
+        // this.props.loadArticles();
     }
 
-    handleScoreChange = (score) => {
-        this.setState(prevState => ({
-            scores: Object.assign(prevState.scores, { [score.word]: score }),
-            totalScore: prevState.totalScore + (score.count > 0 ? score.count : -1),
-            nouns: prevState.nouns.filter(noun => noun.origin !== score.word)
-        }));
-    };
-
+    handleLoadClick = () => {
+        this.props.load();
+    }
 
     render() {
-        if (this.state.nouns.length === 0) {
-            return ([
-                <Typography key='a'>Your score: {this.state.totalScore}</Typography>,
-                <Page key='b'>Please wait</Page>
-            ]);
+        if (this.props.tasks.length === 0) {
+            return (
+                <Page>
+                    <Typography key='score' component='span' variant="headline" color="primary">Your score: <b>{this.props.totalScore}</b></Typography>
+                    <Button variant="contained" color="primary" onClick={this.handleLoadClick} >Start learning</Button>
+                </Page>
+            );
         }
 
-        const noun = sample(this.state.nouns)
-        return ([
-            <Typography key='a' >Your score: {this.state.totalScore}</Typography>,
-            <ArticleQuestion key='b' noun={noun} onScoreChange={this.handleScoreChange} currentScore={this.state.scores[noun.origin]} />
-        ]);
+        return (
+            <Page>
+                <Typography key='score' component='span' variant="headline" color="primary">Your score: <b>{this.props.totalScore}</b></Typography>
+                <Typography key='left' component='span' variant="subheading" >left <b>{this.props.tasks.length}</b> questions</Typography>
+                <ArticleQuestion />
+            </Page>
+        );
     }
 }
 
-export default Articles; 
+const mapStateToProps = state => ({
+    tasks: state.articleTasks,
+    totalScore: state.articleTotalScore
+})
+
+
+export default connect(mapStateToProps, { load })(Articles); 
