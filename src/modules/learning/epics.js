@@ -2,6 +2,7 @@ import { map, mapTo, mergeMap, withLatestFrom, filter, switchMap, tap } from 'rx
 import { of } from 'rxjs/index';
 import { ofType } from 'redux-observable';
 import _shuffle from 'lodash.shuffle'
+import { epicErrorHandler } from '../utils'
 import *  as a from './actions';
 import *  as dict from '../dictionary/actions';
 
@@ -9,7 +10,7 @@ const selectArticlesToLearn = (dictionary) => {
     const articleTasks = Object.values(dictionary)
         .filter(task => task.articleScore && task.articleScore.count < 5)
         .sort((task1, task2) => (!task1.articleScore.viewed || task1.articleScore.viewed < task2.articleScore.viewed) ? -1 : 1)
-        .slice(0, 30)
+        .slice(0, 3)
         .map(task => task.articleScore.id)
     return _shuffle(articleTasks)
 }
@@ -23,13 +24,14 @@ export const loadingStart = (action$, state$) => action$.pipe(
             loading = true
             return of(dict.load())
         }
-
+        console.log('here1')
         return of(
             { type: a.ARTICLES_SET_TOTAL_SCORE, payload: 0 },
             { type: a.ARTICLES_SET_QUESTIONS, payload: selectArticlesToLearn(state.dictionary) },
             { type: a.ARTICLES_LOADED }
         )
-    })
+    }),
+    epicErrorHandler
 );
 
 export const loadingEnd = (action$, state$) => action$.pipe(
@@ -41,7 +43,8 @@ export const loadingEnd = (action$, state$) => action$.pipe(
         { type: a.ARTICLES_SET_QUESTIONS, payload: selectArticlesToLearn(state.dictionary) },
         { type: a.ARTICLES_LOADED })
     ),
-    tap(() => { loading = false })
+    tap(() => { loading = false }),
+    epicErrorHandler
 );
 
 let answering = false
@@ -67,7 +70,8 @@ export const answeringStart = (action$, state$) => action$.pipe(
             { type: a.ARTICLES_SET_TOTAL_SCORE, payload: totalScore },
             { type: a.ARTICLES_SET_QUESTIONS, payload: articleTasks },
         )
-    })
+    }),
+    epicErrorHandler
 );
 
 // TODO fix sync must be after update
@@ -75,12 +79,14 @@ export const answeringProccess = action$ => action$.pipe(
     ofType(a.ARTICLES_SET_QUESTIONS),
     filter(() => answering),
     filter((action) => action.payload.length === 0),
-    mapTo(dict.sync())
+    mapTo(dict.sync()),
+    epicErrorHandler
 );
 
 export const answeringEnd = action$ => action$.pipe(
     ofType(dict.DICTIONARY_UPDATED),
     filter(() => answering),
     map(() => ({ type: a.ARTICLES_QUESTION_ANSWERED, payload: answering })),
-    tap(() => { answering = false })
+    tap(() => { answering = false }),
+    epicErrorHandler
 );

@@ -5,6 +5,7 @@ import * as a from './actions';
 import ArticleService from './ScoreService'
 import NounService from './NounService'
 import YandexService from './yandexService'
+import { epicErrorHandler } from '../utils'
 
 
 export const fetchServices = action$ => action$.pipe(
@@ -19,7 +20,8 @@ export const fetchServices = action$ => action$.pipe(
             payload: error,
             error: true
         }))
-    ))
+    )),
+    epicErrorHandler
 );
 
 
@@ -36,7 +38,8 @@ export const saveEntity = action$ => action$.pipe(
             error: true,
             entity: action.payload
         }))
-    ))
+    )),
+    epicErrorHandler
 );
 
 
@@ -70,5 +73,6 @@ export const fetchDictItem = action$ => action$.pipe(
             payload: errorObject.message,
             error: true
         })),
-    ))
+    )),
+    epicErrorHandler
 );

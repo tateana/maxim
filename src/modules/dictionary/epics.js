@@ -1,6 +1,7 @@
 import { map, mapTo, switchMap, mergeMap, withLatestFrom, filter, ignoreElements, throttleTime, tap } from 'rxjs/operators';
 import { of, from } from 'rxjs/index';
 import { ofType } from 'redux-observable';
+import { epicErrorHandler } from '../utils'
 
 import *  as a from './actions';
 import * as api from '../api/actions';
@@ -48,6 +49,7 @@ export const updating = (action$, state$) => action$.pipe(
     ofType(a.DICTIONARY_UPDATE, api.FETCH_SERVICES_SUCCESS, api.FETCH_WORD_SUCCESS),
     withLatestFrom(state$),
     map(([action, state]) => ({ type: a.DICTIONARY_UPDATED, payload: mergeDataToDictionary(state.dictionary, action.payload) })),
+    epicErrorHandler
 );
 
 let findingItem = false;
@@ -60,28 +62,32 @@ export const findingItemStart = (action$, state$) => action$.pipe(
         }
         findingItem = true
         return of(api.fetchDictItem(action.payload))
-    })
+    }),
+    epicErrorHandler
 );
 
 export const findingItemProccessing = action$ => action$.pipe(
     filter(() => findingItem),
     ofType(api.FETCH_WORD_SUCCESS),
     tap((action) => { findingItem = action.payload[0].id; }),
-    ignoreElements()
+    ignoreElements(),
+    epicErrorHandler
 );
 
 export const findingItemFailEnd = action$ => action$.pipe(
     filter(() => findingItem),
     ofType(api.FETCH_WORD_NOT_FOUND),
     map(() => ({ type: a.DICTIONARY_ITEM_FOUND, payload: false })),
-    tap(() => { findingItem = false })
+    tap(() => { findingItem = false }),
+    epicErrorHandler
 );
 
 export const findingItemEnd = action$ => action$.pipe(
     filter(() => findingItem),
     ofType(a.DICTIONARY_UPDATED),
     map(() => ({ type: a.DICTIONARY_ITEM_FOUND, payload: findingItem })),
-    tap(() => { findingItem = false })
+    tap(() => { findingItem = false }),
+    epicErrorHandler
 );
 
 
@@ -89,20 +95,23 @@ let savingItems = false;
 export const savingItemsStart = action$ => action$.pipe(
     ofType(a.DICTIONARY_ITEMS_SAVE),
     tap(() => { savingItems = true }),
-    map(action => ({ type: a.DICTIONARY_UPDATE, payload: action.payload }))
+    map(action => ({ type: a.DICTIONARY_UPDATE, payload: action.payload })),
+    epicErrorHandler
 );
 
 export const savingItemsProccessing = action$ => action$.pipe(
     filter(() => savingItems),
     ofType(a.DICTIONARY_UPDATED),
-    mapTo(a.sync())
+    mapTo(a.sync()),
+    epicErrorHandler
 );
 
 export const savingItemsEnd = action$ => action$.pipe(
     filter(() => savingItems),
     ofType(a.DICTIONARY_SYNCED),
     mapTo({ type: a.DICTIONARY_ITEMS_SAVED }),
-    tap(() => { savingItems = false })
+    tap(() => { savingItems = false }),
+    epicErrorHandler
 );
 
 
@@ -111,20 +120,21 @@ export const synchronizingStart = (action$, state$) => action$.pipe(
     ofType(a.DICTIONARY_SYNC),
     withLatestFrom(state$),
     switchMap(([, state]) => from(Object.values(state.dictionary)).pipe(
-        filter(item => item.articleScore.isModified || item.word.isModified),
+        filter(item => item.word.isModified || !item.articleScore || item.articleScore.isModified),
         mergeMap(item => {
             const apiRequests = []
             if (item.word.isModified) {
                 synchronizing += 1
                 apiRequests.push(api.saveWord(item.word))
             }
-            if (item.articleScore.isModified) {
+            if (item.articleScore && item.articleScore.isModified) {
                 synchronizing += 1
                 apiRequests.push(api.saveArticleScore(item.articleScore))
             }
             return of(...apiRequests)
         })
-    ))
+    )),
+    epicErrorHandler
 );
 
 export const synchronizingEnd = action$ => action$.pipe(
@@ -137,4 +147,5 @@ export const synchronizingEnd = action$ => action$.pipe(
     filter(() => synchronizing === 0),
     // bufferTime(2000), // 2 seconds
     map(id => ({ type: a.DICTIONARY_SYNCED, payload: id })),
+    epicErrorHandler
 );
