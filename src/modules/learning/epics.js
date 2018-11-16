@@ -10,7 +10,7 @@ const selectArticlesToLearn = (dictionary) => {
     const articleTasks = Object.values(dictionary)
         .filter(task => task.articleScore && task.articleScore.count < 5)
         .sort((task1, task2) => (!task1.articleScore.viewed || task1.articleScore.viewed < task2.articleScore.viewed) ? -1 : 1)
-        .slice(0, 3)
+        .slice(0, 30)
         .map(task => task.articleScore.id)
     return _shuffle(articleTasks)
 }
@@ -24,7 +24,6 @@ export const loadingStart = (action$, state$) => action$.pipe(
             loading = true
             return of(dict.load())
         }
-        console.log('here1')
         return of(
             { type: a.ARTICLES_SET_TOTAL_SCORE, payload: 0 },
             { type: a.ARTICLES_SET_QUESTIONS, payload: selectArticlesToLearn(state.dictionary) },
@@ -74,7 +73,6 @@ export const answeringStart = (action$, state$) => action$.pipe(
     epicErrorHandler
 );
 
-// TODO fix sync must be after update
 export const answeringProccess = action$ => action$.pipe(
     ofType(a.ARTICLES_SET_QUESTIONS),
     filter(() => answering),
