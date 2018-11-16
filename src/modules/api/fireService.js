@@ -39,7 +39,6 @@ export default class FireService {
     }
 
     fetchExact(id) {
-        console.log('BADD')
         return from(
             this.collection.doc(upperFirst(id)).get()
                 .then((doc) => {

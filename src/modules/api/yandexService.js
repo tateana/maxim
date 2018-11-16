@@ -1,6 +1,5 @@
 import { ajax as rxjsAjax } from 'rxjs/ajax';
 import { map } from 'rxjs/operators';
-import { from } from 'rxjs/index';
 import Noun from './Noun'
 
 
