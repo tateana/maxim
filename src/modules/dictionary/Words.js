@@ -1,53 +1,85 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import _map from 'lodash.map'
+import _orderBy from 'lodash.orderby'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Typography from '@material-ui/core/Typography';
 import Page from '../../components/Page';
 import { Noun, Score } from '../api'
 
 
+class Words extends Component {
 
-function Words(props) {
-    const { dictionary } = props
-    let index = 0;
-    return (
-        <Page>
-            <Typography variant="title">
-                New Nouns
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            orderBy: 'id',
+            orderDirection: 'asc'
+        }
+    }
+
+    handleSort = (event) => {
+        const orderBy = event.target.dataset.sortfield;
+        const orderDirection = this.state.orderDirection === 'asc' ? 'desc' : 'asc'
+
+
+        this.setState({ orderDirection, orderBy });
+    }
+
+    render() {
+        const { orderBy, orderDirection } = this.state
+        const dictionary = _orderBy(this.props.dictionary, [({ articleScore }) => articleScore ? articleScore[orderBy] : null], [orderDirection])
+        let index = 0;
+        return (
+            <Page>
+                <Typography variant="title">
+                    New Nouns
             </Typography>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>N</TableCell>
-                        <TableCell>Noun</TableCell>
-                        <TableCell>Translate</TableCell>
-                        <TableCell >Article Score</TableCell>
-                        <TableCell>Last learning</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {_map(dictionary, ({ word, articleScore }) => (
-                        <TableRow key={word.id}>
-                            <TableCell>{index++}</TableCell>
-                            <TableCell component="th" scope="row">
-                                {word.literalGender} {word.origin}
+                <Table padding="none">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>N</TableCell>
+                            <TableCell>Noun</TableCell>
+                            <TableCell>Translate</TableCell>
+                            <TableCell sortDirection={orderBy === 'count' ? orderDirection : false}>
+                                <TableSortLabel active={orderBy === 'count'} data-sortfield="count" direction={orderDirection} onClick={this.handleSort}                             >
+                                    Article Score
+                                </TableSortLabel>
                             </TableCell>
-                            <TableCell>{word.translate}</TableCell>
-                            <TableCell numeric>{articleScore ? articleScore.count : '-'}</TableCell>
-                            <TableCell>{articleScore ? articleScore.humanViewed : '-'}</TableCell>
+                            <TableCell sortDirection={orderBy === 'viewed' ? orderDirection : false}>
+                                <TableSortLabel active={orderBy === 'viewed'} data-sortfield="viewed" direction={orderDirection} onClick={this.handleSort}                             >
+                                    Last learning
+                                </TableSortLabel>
+                            </TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </Page>
-    );
+                    </TableHead>
+                    <TableBody>
+                        {_map(dictionary, ({ word, articleScore }) => (
+                            <TableRow key={word.id}>
+                                <TableCell>{index++}</TableCell>
+                                <TableCell component="th" scope="row">
+                                    {word.literalGender} {word.origin}
+                                </TableCell>
+                                <TableCell>{word.translate}</TableCell>
+                                <TableCell >{articleScore ? articleScore.count : '-'}</TableCell>
+                                <TableCell>{articleScore ? articleScore.humanViewed : '-'}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </Page>
+        );
+    }
 }
+
+
 
 Words.propTypes = {
     dictionary: PropTypes.objectOf(PropTypes.shape({
