@@ -9,8 +9,23 @@ import *  as dict from '../dictionary/actions';
 const selectArticlesToLearn = (dictionary) => {
     const articleTasks = Object.values(dictionary)
         .filter(task => task.articleScore && task.articleScore.count < 5)
-        .sort((task1, task2) => (!task1.articleScore.viewed || task1.articleScore.viewed < task2.articleScore.viewed) ? -1 : 1)
-        .slice(0, 2)
+        .sort((task1, task2) => {
+            if (task1.articleScore.count > task2.articleScore.count) {
+                return 1
+            }
+            if (task1.articleScore.count < task2.articleScore.count) {
+                return -1
+            }
+            if (!task1.articleScore.viewed || task1.articleScore.viewed < task2.articleScore.viewed) {
+                return -1
+            }
+            if (!task2.articleScore.viewed || task1.articleScore.viewed > task2.articleScore.viewed) {
+                return 1
+            }
+
+            return 0
+        })
+        .slice(0, 30)
         .map(task => task.articleScore.id)
     return _shuffle(articleTasks)
 }
