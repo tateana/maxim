@@ -9,6 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import Page from '../../components/Page';
 import { Noun, Score } from '../api'
@@ -53,11 +54,13 @@ class Words extends Component {
                                     Article Score
                                 </TableSortLabel>
                             </TableCell>
-                            <TableCell sortDirection={orderBy === 'viewed' ? orderDirection : false}>
-                                <TableSortLabel active={orderBy === 'viewed'} data-sortfield="viewed" direction={orderDirection} onClick={this.handleSort}                             >
-                                    Last learning
+                            <Hidden xsDown>
+                                <TableCell sortDirection={orderBy === 'viewed' ? orderDirection : false}>
+                                    <TableSortLabel active={orderBy === 'viewed'} data-sortfield="viewed" direction={orderDirection} onClick={this.handleSort}                             >
+                                        Last learning
                                 </TableSortLabel>
-                            </TableCell>
+                                </TableCell>
+                            </Hidden>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -69,7 +72,9 @@ class Words extends Component {
                                 </TableCell>
                                 <TableCell>{word.translate}</TableCell>
                                 <TableCell >{articleScore ? articleScore.count : '-'}</TableCell>
-                                <TableCell>{articleScore ? articleScore.humanViewed : '-'}</TableCell>
+                                <Hidden xsDown>
+                                    <TableCell>{articleScore ? articleScore.humanViewed : '-'}</TableCell>
+                                </Hidden>
                             </TableRow>
                         ))}
                     </TableBody>
