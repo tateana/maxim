@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Menu from "./Menu"
 import Dashboard from "../../components/Dashboard"
 
-import Dictionary from "../dictionary"
+import Dictionary, { Words } from "../dictionary"
 import Articles from "../learning"
 import Error404 from "./Error404"
 
@@ -22,6 +22,7 @@ const App = () => {
             <Dashboard toolbar={toolbar} menu={<Menu />} >
                 <Switch>
                     <Route exact path="/" component={Dictionary} />
+                    <Route path="/dict/words" component={Words} />
                     <Route path="/learning/articles" component={Articles} />
                     <Route component={Error404} />
                 </Switch>

@@ -7,7 +7,7 @@ class ScoreService extends FireService {
 
     static docToEntity(doc) {
         const data = doc.data();
-        return new Score(doc.id, data.count)
+        return new Score(doc.id, data.count, new Date(data.viewed.seconds * 1000))
     }
 
     static getName() {

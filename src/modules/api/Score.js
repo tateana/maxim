@@ -5,10 +5,10 @@ export default class Score {
 
     static _entityType = 'articleScore'
 
-    constructor(word, count = 0) {
+    constructor(word, count = 0, viewed = null) {
         this._word = word
         this._count = count
-        this._viewed = null;
+        this._viewed = viewed;
         this._isModified = false;
     }
 
@@ -22,6 +22,12 @@ export default class Score {
 
     get viewed() {
         return this._viewed
+    }
+
+    get humanViewed() {
+        if (this._viewed === null)
+            return ''
+        return this._viewed.toLocaleString()
     }
 
     get count() {
@@ -38,7 +44,6 @@ export default class Score {
 
     doModified() {
         this._isModified = true
-        console.log('score', this._isModified)
     }
 
     synced() {

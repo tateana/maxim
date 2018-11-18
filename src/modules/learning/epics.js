@@ -10,7 +10,7 @@ const selectArticlesToLearn = (dictionary) => {
     const articleTasks = Object.values(dictionary)
         .filter(task => task.articleScore && task.articleScore.count < 5)
         .sort((task1, task2) => (!task1.articleScore.viewed || task1.articleScore.viewed < task2.articleScore.viewed) ? -1 : 1)
-        .slice(0, 30)
+        .slice(0, 2)
         .map(task => task.articleScore.id)
     return _shuffle(articleTasks)
 }
