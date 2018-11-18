@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -62,5 +63,10 @@ class Search extends Component {
         );
     }
 }
+
+Search.propTypes = {
+    value: PropTypes.string.isRequired,
+    onSearch: PropTypes.func.isRequired
+};
 
 export default Search; 
