@@ -28,10 +28,10 @@ class Words extends Component {
 
     handleSort = (event) => {
         const orderBy = event.target.dataset.sortfield;
-        const orderDirection = this.state.orderDirection === 'asc' ? 'desc' : 'asc'
-
-
-        this.setState({ orderDirection, orderBy });
+        this.setState(prewState => ({
+            orderDirection: prewState.orderDirection === 'asc' ? 'desc' : 'asc',
+            orderBy
+        }))
     }
 
     render() {

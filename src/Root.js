@@ -6,7 +6,9 @@ import App from "./modules/app";
 
 const Root = () => (
     <Provider store={store}>
-        < App />
+        <React.StrictMode>
+            < App />
+        </React.StrictMode>
     </Provider>
 )
 
