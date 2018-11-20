@@ -1,7 +1,7 @@
 import pick from 'lodash.pick';
 import { from } from 'rxjs/index';
 import FireService, { fireDb } from './fireService';
-import Score from './Score';
+import Score from './Entity/Score';
 
 class ScoreService extends FireService {
 

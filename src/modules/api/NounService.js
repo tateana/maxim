@@ -2,7 +2,7 @@ import pick from 'lodash.pick';
 import upperFirst from 'lodash.upperfirst';
 import { from } from 'rxjs/index';
 import FireService, { fireDb } from './fireService';
-import Noun from './Noun';
+import Noun from './Entity/Noun';
 
 class NounService extends FireService {
 

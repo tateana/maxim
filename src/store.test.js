@@ -17,6 +17,8 @@ ArticleService.fetchExact = jest.fn();
 NounService.add = jest.fn();
 ArticleService.add = jest.fn();
 
+const today = new Date('2018-11-20T18:53:31.633Z')
+
 describe('dictionary flow dispatches the correct action and payload', () => {
 
     let triggeredActions = []
@@ -44,7 +46,7 @@ describe('dictionary flow dispatches the correct action and payload', () => {
         })
 
         testSpec[1] = it('word and its score are found in database', () => {
-            const noun = new Noun('Busch', null, 'm', 'куст')
+            const noun = new Noun('Busch', null, 'm', 'куст', today)
             NounService.fetchExact.mockReturnValue(of(noun))
             const score = new Score('Busch', 2)
             ArticleService.fetchExact.mockReturnValue(of(score))
@@ -69,7 +71,7 @@ describe('dictionary flow dispatches the correct action and payload', () => {
         });
 
         testSpec[3] = it('word is found in Yandex', () => {
-            const noun = new Noun('Fenster', ['окно'], 'n')
+            const noun = new Noun('Fenster', ['окно'], 'n', null, today)
             NounService.fetchExact.mockReturnValue(of(null))
             YandexService.find.mockReturnValue(of(noun))
 
@@ -93,7 +95,7 @@ describe('dictionary flow dispatches the correct action and payload', () => {
         })
 
         testSpec[4] = it('score saved successfully', () => {
-            const noun = new Noun('Busch', null, 'm', 'куст')
+            const noun = new Noun('Busch', null, 'm', 'куст', today)
             const score = new Score('Busch', 2)
             score.doModified()
             ArticleService.add.mockReturnValue(of(score))
@@ -105,7 +107,7 @@ describe('dictionary flow dispatches the correct action and payload', () => {
         });
 
         testSpec[5] = it('noun saved successfully', () => {
-            const noun = new Noun('Tisch', null, 'm', 'стол')
+            const noun = new Noun('Tisch', null, 'm', 'стол', today)
             noun.doModified()
             const score = new Score('Tisch', 5)
             NounService.add.mockReturnValue(of(noun))
@@ -117,7 +119,7 @@ describe('dictionary flow dispatches the correct action and payload', () => {
         });
 
         testSpec[6] = it('noun and score are saved successfully', () => {
-            const noun = new Noun('Tisch', null, 'm', 'стол')
+            const noun = new Noun('Tisch', null, 'm', 'стол', today)
             noun.doModified()
             const score = new Score('Tisch', 5)
             score.doModified()
@@ -126,7 +128,7 @@ describe('dictionary flow dispatches the correct action and payload', () => {
 
             store.dispatch(actions.saveEntities([noun, score]));
             expect(NounService.add).toHaveBeenCalledTimes(1);
-            expect(ArticleService.add).not.toHaveBeenCalledTimes(1);
+            expect(ArticleService.add).toHaveBeenCalledTimes(1);
             expect(triggeredActions).toMatchSnapshot();
         });
     });
