@@ -13,9 +13,17 @@ export const DICTIONARY_ITEM_FOUND = "DICTIONARY_ITEM_FOUND"
 export const DICTIONARY_ITEMS_SAVE = "DICTIONARY_ITEMS_SAVE"
 export const DICTIONARY_ITEMS_SAVED = "DICTIONARY_ITEMS_SAVED"
 
+export const DICTIONARY_CLEAR = "DICTIONARY_CLEAR"
+
 export function load() {
     return {
         type: DICTIONARY_LOAD
+    }
+}
+
+export function clear() {
+    return {
+        type: DICTIONARY_CLEAR
     }
 }
 

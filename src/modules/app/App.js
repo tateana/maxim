@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -18,16 +18,14 @@ const App = () => {
         </Typography>
     </Toolbar>;
     return (
-        <Router>
-            <Dashboard toolbar={toolbar} menu={<Menu />} >
-                <Switch>
-                    <Route exact path="/" component={Dictionary} />
-                    <Route path="/dict/words" component={Words} />
-                    <Route path="/learning/articles" component={Articles} />
-                    <Route component={Error404} />
-                </Switch>
-            </Dashboard>
-        </Router>
+        <Dashboard toolbar={toolbar} menu={<Menu />} >
+            <Switch>
+                <Route exact path="/" component={Dictionary} />
+                <Route path="/dict/words" component={Words} />
+                <Route path="/learning/articles" component={Articles} />
+                <Route component={Error404} />
+            </Switch>
+        </Dashboard>
     )
 }
 

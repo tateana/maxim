@@ -85,9 +85,7 @@ class Dashboard extends React.Component {
                     <main className={classes.main}>
                         <Hidden mdUp>
                             <Collapse in={this.state.isOpen} component={Page}>
-
                                 {menu}
-
                             </Collapse>
                         </Hidden>
                         {children}

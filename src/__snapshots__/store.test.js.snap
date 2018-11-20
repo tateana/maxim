@@ -81,21 +81,6 @@ Array [
   },
   Object {
     "payload": Object {
-      "Busch": Object {
-        "articleScore": Score {
-          "_count": 2,
-          "_isModified": false,
-          "_viewed": null,
-          "_word": "Busch",
-        },
-        "word": Noun {
-          "_de": "Busch",
-          "_gender": "m",
-          "_isModified": false,
-          "_ru": "куст",
-          "_ruOptions": null,
-        },
-      },
       "Fenster": Object {
         "word": Noun {
           "_de": "Fenster",
@@ -138,13 +123,117 @@ Array [
 ]
 `;
 
-exports[`dictionary flow dispatches the correct action and payload Save Dict Items flow dispatches the correct action and payload items saved successfully 1`] = `
+exports[`dictionary flow dispatches the correct action and payload Save Dict Items flow dispatches the correct action and payload noun saved successfully 1`] = `
 Array [
   Object {
     "payload": Array [
+      Noun {
+        "_de": "Tisch",
+        "_gender": "m",
+        "_isModified": false,
+        "_ru": "стол",
+        "_ruOptions": null,
+      },
+      Score {
+        "_count": 5,
+        "_isModified": false,
+        "_viewed": null,
+        "_word": "Tisch",
+      },
+    ],
+    "type": "DICTIONARY_ITEMS_SAVE",
+  },
+  Object {
+    "payload": Array [
+      Noun {
+        "_de": "Tisch",
+        "_gender": "m",
+        "_isModified": false,
+        "_ru": "стол",
+        "_ruOptions": null,
+      },
+      Score {
+        "_count": 5,
+        "_isModified": false,
+        "_viewed": null,
+        "_word": "Tisch",
+      },
+    ],
+    "type": "DICTIONARY_UPDATE",
+  },
+  Object {
+    "payload": Object {
+      "Tisch": Object {
+        "articleScore": Score {
+          "_count": 5,
+          "_isModified": false,
+          "_viewed": null,
+          "_word": "Tisch",
+        },
+        "word": Noun {
+          "_de": "Tisch",
+          "_gender": "m",
+          "_isModified": false,
+          "_ru": "стол",
+          "_ruOptions": null,
+        },
+      },
+    },
+    "type": "DICTIONARY_UPDATED",
+  },
+  Object {
+    "type": "DICTIONARY_SYNC",
+  },
+  Object {
+    "payload": Noun {
+      "_de": "Tisch",
+      "_gender": "m",
+      "_isModified": false,
+      "_ru": "стол",
+      "_ruOptions": null,
+    },
+    "service": NounService {
+      "add": [Function],
+      "collection": null,
+      "db": null,
+      "fetchExact": [Function],
+    },
+    "type": "SAVE_ENTITY",
+  },
+  Object {
+    "payload": Noun {
+      "_de": "Tisch",
+      "_gender": "m",
+      "_isModified": false,
+      "_ru": "стол",
+      "_ruOptions": null,
+    },
+    "type": "SAVE_ENTITY_SUCCESS",
+  },
+  Object {
+    "payload": "Tisch",
+    "type": "DICTIONARY_SYNCED",
+  },
+  Object {
+    "type": "DICTIONARY_ITEMS_SAVED",
+  },
+]
+`;
+
+exports[`dictionary flow dispatches the correct action and payload Save Dict Items flow dispatches the correct action and payload score saved successfully 1`] = `
+Array [
+  Object {
+    "payload": Array [
+      Noun {
+        "_de": "Busch",
+        "_gender": "m",
+        "_isModified": false,
+        "_ru": "куст",
+        "_ruOptions": null,
+      },
       Score {
         "_count": 2,
-        "_isModified": true,
+        "_isModified": false,
         "_viewed": null,
         "_word": "Busch",
       },
@@ -153,9 +242,16 @@ Array [
   },
   Object {
     "payload": Array [
+      Noun {
+        "_de": "Busch",
+        "_gender": "m",
+        "_isModified": false,
+        "_ru": "куст",
+        "_ruOptions": null,
+      },
       Score {
         "_count": 2,
-        "_isModified": true,
+        "_isModified": false,
         "_viewed": null,
         "_word": "Busch",
       },
@@ -167,7 +263,7 @@ Array [
       "Busch": Object {
         "articleScore": Score {
           "_count": 2,
-          "_isModified": true,
+          "_isModified": false,
           "_viewed": null,
           "_word": "Busch",
         },
@@ -179,22 +275,42 @@ Array [
           "_ruOptions": null,
         },
       },
-      "Fenster": Object {
-        "word": Noun {
-          "_de": "Fenster",
-          "_gender": "n",
-          "_isModified": false,
-          "_ru": "окно",
-          "_ruOptions": Array [
-            "окно",
-          ],
-        },
-      },
     },
     "type": "DICTIONARY_UPDATED",
   },
   Object {
     "type": "DICTIONARY_SYNC",
+  },
+  Object {
+    "payload": Score {
+      "_count": 2,
+      "_isModified": false,
+      "_viewed": null,
+      "_word": "Busch",
+    },
+    "service": ScoreService {
+      "add": [Function],
+      "collection": null,
+      "db": null,
+      "fetchExact": [Function],
+    },
+    "type": "SAVE_ENTITY",
+  },
+  Object {
+    "payload": Score {
+      "_count": 2,
+      "_isModified": false,
+      "_viewed": null,
+      "_word": "Busch",
+    },
+    "type": "SAVE_ENTITY_SUCCESS",
+  },
+  Object {
+    "payload": "Busch",
+    "type": "DICTIONARY_SYNCED",
+  },
+  Object {
+    "type": "DICTIONARY_ITEMS_SAVED",
   },
 ]
 `;

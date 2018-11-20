@@ -9,6 +9,10 @@ function dictionary(state = {}, action) {
         return action.payload
     }
 
+    if (action.type === d.DICTIONARY_CLEAR) {
+        return {}
+    }
+
     return state
 }
 

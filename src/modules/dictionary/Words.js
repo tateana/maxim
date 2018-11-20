@@ -40,14 +40,12 @@ class Words extends Component {
         let index = 0;
         return (
             <Page>
-                <Typography variant="title">
-                    New Nouns
-            </Typography>
+                <Typography variant="title">Dictionary List</Typography>
                 <Table padding="none">
                     <TableHead>
                         <TableRow>
                             <TableCell>N</TableCell>
-                            <TableCell>Noun</TableCell>
+                            <TableCell>Word</TableCell>
                             <TableCell>Translate</TableCell>
                             <TableCell sortDirection={orderBy === 'count' ? orderDirection : false}>
                                 <TableSortLabel active={orderBy === 'count'} data-sortfield="count" direction={orderDirection} onClick={this.handleSort}                             >
