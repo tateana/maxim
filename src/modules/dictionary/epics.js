@@ -11,6 +11,9 @@ const mergeDataToDictionary = (currentDictionary, data) => {
     const dictionary = Object.assign({}, currentDictionary)
 
     const merge = (item) => {
+        if (item === null) {
+            return
+        }
         dictionary[item.id] = Object.assign({}, dictionary[item.id])
         dictionary[item.id][item.constructor.entityType] = item;
     }

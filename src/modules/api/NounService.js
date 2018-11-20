@@ -1,14 +1,21 @@
-import pick from 'lodash.pick';
 import upperFirst from 'lodash.upperfirst';
 import { from } from 'rxjs/index';
 import FireService, { fireDb } from './fireService';
 import Noun from './Entity/Noun';
+import Word from './Entity/Word';
+import Verb from './Entity/Verb';
 
 class NounService extends FireService {
 
     static docToEntity(doc) {
         const data = doc.data();
-        return new Noun(data.de, null, data.gender, data.ru)
+        if (data.gender)
+            return new Noun(data.de, null, data.gender, data.ru, super.fbDateToDate(data.created))
+
+        if (data.forms)
+            return new Verb(data.de, null, data.ru, super.fbDateToDate(data.created), data.forms)
+
+        return new Word(data.de, null, data.ru, super.fbDateToDate(data.created))
     }
 
     static getName() {
@@ -24,15 +31,6 @@ class NounService extends FireService {
                     const data = doc.data();
                     return new Noun(data.de, null, data.gender, data.ru)
                 }))
-        )
-    }
-
-    add(noun) {
-        return from(this.collection
-            .doc(noun.de)
-            .set(pick(noun, ['de', 'ru', 'gender', 'created']))
-            .then(() => true)
-            // .catch(error => false)
         )
     }
 }

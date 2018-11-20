@@ -13,7 +13,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Page from '../../components/Page';
 import Button from '../../components/Button';
-import { Noun, Score } from '../api'
+import { Word, Score } from '../api'
 import { saveEntities } from './actions'
 
 
@@ -48,8 +48,10 @@ class DictionaryForm extends Component {
     handleSaveClick = () => {
         const toSave = []
         if (this.state.toSaveNoun) {
-            const { origin, gender, translate } = this.state
-            const noun = new Noun(origin, null, gender, translate)
+            const { gender, translate } = this.state
+            const noun = this.props.task.word.clone()
+            noun.gender = gender
+            noun.translate = translate
             noun.doModified()
             toSave.push(noun)
         }
@@ -133,7 +135,7 @@ DictionaryForm.propTypes = {
     task: PropTypes.shape({
         articleScore: PropTypes.instanceOf(Score),
         spellScore: PropTypes.instanceOf(Score),
-        word: PropTypes.instanceOf(Noun).isRequired
+        word: PropTypes.instanceOf(Word).isRequired
     }).isRequired,
     saveEntities: PropTypes.func.isRequired
 };

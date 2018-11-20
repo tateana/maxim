@@ -1,4 +1,5 @@
 /* eslint no-underscore-dangle: 0 */  // --> OFF
+import pick from 'lodash.pick';
 
 export default class Entity {
 
@@ -7,10 +8,6 @@ export default class Entity {
     constructor(id) {
         this._id = id
         this._isModified = false;
-    }
-
-    get entityType2() {
-        return this.constructor._entityType;
     }
 
     static get entityType() {
@@ -42,5 +39,9 @@ export default class Entity {
 
     view() {
         this._viewed = new Date()
+    }
+
+    toObject(propList = ['id']) {
+        return pick(this, propList)
     }
 }

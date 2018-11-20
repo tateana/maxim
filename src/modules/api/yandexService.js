@@ -1,7 +1,8 @@
 import { ajax as rxjsAjax } from 'rxjs/ajax';
 import { map } from 'rxjs/operators';
 import Noun from './Entity/Noun'
-
+import Verb from './Entity/Verb'
+import Word from './Entity/Word'
 
 
 
@@ -51,8 +52,16 @@ class YandexService {
                         return false
                     }
 
-                    const { text, gen, tr } = response.response.def[0]
-                    return new Noun(text, tr.map(meta => meta.text), gen)
+                    const { text, gen, tr, pos } = response.response.def[0]
+                    if (pos === 'noun') {
+                        return new Noun(text, tr.map(meta => meta.text), gen)
+                    }
+
+                    if (pos === 'verb') {
+                        return new Verb(text, tr.map(meta => meta.text))
+                    }
+
+                    return new Word(text, tr.map(meta => meta.text))
                 }
 
                 throw new Error('Yandex Response Status is not 200')

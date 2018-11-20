@@ -25,4 +25,12 @@ export default class Noun extends Word {
     set gender(value) {
         this._gender = value
     }
+
+    toObject(propList = ['de', 'ru', 'gender', 'created']) {
+        return super.toObject(propList)
+    }
+
+    clone() {
+        return new Noun(this.id, this.translates, this.gender, this.translate);
+    }
 }

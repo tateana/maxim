@@ -43,4 +43,12 @@ export default class Word extends Entity {
     get isWritable() {
         return this._ruOptions && this._ruOptions.length > 0
     }
+
+    toObject(propList = ['de', 'ru', 'created']) {
+        return super.toObject(propList)
+    }
+
+    clone() {
+        return new Word(this.id, this.translates, this.translate);
+    }
 }

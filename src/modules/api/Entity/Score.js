@@ -49,4 +49,8 @@ export default class Score extends Entity {
         const newScore = new Score(this.word, this.count, this.viewed);
         return newScore;
     }
+
+    toObject(propList = ['count', 'viewed']) {
+        return super.toObject(propList)
+    }
 }

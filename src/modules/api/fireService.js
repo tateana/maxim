@@ -30,6 +30,10 @@ export default class FireService {
         throw new Error(`You have to implement convertion of ${typeof (doc)}  to an Entity`);
     }
 
+    static fbDateToDate(fbDate) {
+        return new Date(fbDate.seconds * 1000)
+    }
+
     fetchAll(limit = 10) {
         return from(
             this.collection
@@ -48,6 +52,15 @@ export default class FireService {
 
                     return null;
                 })
+        )
+    }
+
+    add(entity) {
+        return from(this.collection
+            .doc(upperFirst(entity.id))
+            .set(entity.toObject())
+            .then(() => true)
+            // .catch(error => false)
         )
     }
 }
