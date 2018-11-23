@@ -54,3 +54,7 @@ export default class Score extends Entity {
         return super.toObject(propList)
     }
 }
+
+export class SpellScore extends Score {
+    static _entityType = 'spellScore'
+}

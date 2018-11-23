@@ -13,7 +13,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Page from '../../components/Page';
 import Button from '../../components/Button';
-import { Word, Score } from '../api'
+import { Word, Score as ArticleScore, SpellScore } from '../api'
 import { saveEntities } from './actions'
 
 
@@ -37,6 +37,24 @@ class DictionaryForm extends Component {
         };
     }
 
+    * getEntityToSave() {
+        if (this.state.toSaveNoun) {
+            const { gender, translate } = this.state
+            const word = this.props.task.word.clone()
+            word.gender = gender
+            word.translate = translate
+            yield word;
+        }
+
+        if (this.state.toSaveArticleScore) {
+            yield new ArticleScore(this.state.origin);
+        }
+
+        if (this.state.toSaveSpellScore) {
+            yield new SpellScore(this.state.origin);
+        }
+    }
+
     handleChange = event => {
         this.setState({ [event.target.name]: event.target.value, toSaveNoun: true, saveValue: 'Update' });
     };
@@ -45,21 +63,13 @@ class DictionaryForm extends Component {
         this.setState({ [`has${event.target.name}`]: event.target.checked, [`toSave${event.target.name}`]: true, saveValue: 'Update' });
     };
 
+
+
     handleSaveClick = () => {
         const toSave = []
-        if (this.state.toSaveNoun) {
-            const { gender, translate } = this.state
-            const noun = this.props.task.word.clone()
-            noun.gender = gender
-            noun.translate = translate
-            noun.doModified()
-            toSave.push(noun)
-        }
-
-        if (this.state.toSaveArticleScore) {
-            const score = new Score(this.state.origin);
-            score.doModified()
-            toSave.push(score)
+        for (const entity of this.getEntityToSave()) {
+            entity.doModified()
+            toSave.push(entity)
         }
 
         this.props.saveEntities(toSave)
@@ -133,8 +143,8 @@ class DictionaryForm extends Component {
 
 DictionaryForm.propTypes = {
     task: PropTypes.shape({
-        articleScore: PropTypes.instanceOf(Score),
-        spellScore: PropTypes.instanceOf(Score),
+        articleScore: PropTypes.instanceOf(ArticleScore),
+        spellScore: PropTypes.instanceOf(SpellScore),
         word: PropTypes.instanceOf(Word).isRequired
     }).isRequired,
     saveEntities: PropTypes.func.isRequired

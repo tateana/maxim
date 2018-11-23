@@ -9,6 +9,10 @@
     "prettier"
   ],
   "rules": {
+    "no-restricted-syntax": [
+      "error",
+      "WithStatement"
+    ],
     "react/jsx-filename-extension": [
       1,
       {

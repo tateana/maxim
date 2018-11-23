@@ -31,6 +31,9 @@ export default class FireService {
     }
 
     static fbDateToDate(fbDate) {
+        if (!fbDate) {
+            return new Date()
+        }
         return new Date(fbDate.seconds * 1000)
     }
 
@@ -47,17 +50,24 @@ export default class FireService {
             this.collection.doc(upperFirst(id)).get()
                 .then((doc) => {
                     if (doc.exists) {
+                        return doc
+                    }
+
+                    return this.collection.doc(id).get();
+                })
+                .then(doc => {
+                    if (doc.exists) {
                         return this.constructor.docToEntity(doc)
                     }
 
-                    return null;
+                    return null
                 })
         )
     }
 
     add(entity) {
         return from(this.collection
-            .doc(upperFirst(entity.id))
+            .doc(entity.id)
             .set(entity.toObject())
             .then(() => true)
             // .catch(error => false)

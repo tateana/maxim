@@ -1,5 +1,7 @@
-import ArticleService from './ScoreService'
-import NounService from './NounService'
+import articleService, { spellScoreService } from './ScoreService'
+import wordService from './NounService'
+import ArticleScore, { SpellScore } from './Entity/Score';
+import Word from './Entity/Word';
 
 export const FETCH_SERVICES = 'FETCH_SERVICES';
 export const FETCH_SERVICES_SUCCESS = 'FETCH_SERVICES_SUCCESS';
@@ -29,31 +31,32 @@ function fetchServices(services) {
 }
 
 export function fetchAll() {
-    return fetchServices([ArticleService, NounService])
+    return fetchServices([articleService, wordService, spellScoreService])
 }
 
 export function fetchArticles() {
-    return fetchServices([ArticleService])
+    return fetchServices([articleService])
 }
 
 export function fetchNouns() {
-    return fetchServices([NounService])
+    return fetchServices([wordService])
 }
 
-function saveEntity(item, service) {
+export function saveEntity(entity) {
+    let service;
+    if (entity instanceof Word) {
+        service = wordService
+    } else if (entity instanceof SpellScore) {
+        service = spellScoreService
+    } else if (entity instanceof ArticleScore) {
+        service = articleService
+    }
+
     return {
         type: SAVE_ENTITY,
-        payload: item,
+        payload: entity,
         service
     }
-}
-
-export function saveArticleScore(item) {
-    return saveEntity(item, ArticleService)
-}
-
-export function saveWord(item) {
-    return saveEntity(item, NounService)
 }
 
 export function fetchDictItem(item) {

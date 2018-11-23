@@ -5,10 +5,11 @@ import _shuffle from 'lodash.shuffle'
 import { epicErrorHandler } from '../utils'
 import *  as a from './actions';
 import *  as dict from '../dictionary/actions';
+import { Noun } from '../api'
 
 const selectArticlesToLearn = (dictionary) => {
     const articleTasks = Object.values(dictionary)
-        .filter(task => task.articleScore && task.articleScore.count < 5)
+        .filter(task => task.articleScore && task.word instanceof Noun)
         .sort((task1, task2) => {
             if (task1.articleScore.count > task2.articleScore.count) {
                 return 1

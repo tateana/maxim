@@ -18,10 +18,6 @@ class NounService extends FireService {
         return new Word(data.de, null, data.ru, super.fbDateToDate(data.created))
     }
 
-    static getName() {
-        return 'words'
-    }
-
     fetchLike(term, limit = 2) {
         const cleanedTerm = upperFirst(term)
         return from(

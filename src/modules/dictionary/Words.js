@@ -59,10 +59,14 @@ class Words extends Component {
                                 </TableSortLabel>
                                 </TableCell>
                             </Hidden>
+                            <TableCell>Spelling Score</TableCell>
+                            <Hidden xsDown>
+                                <TableCell>Last learning</TableCell>
+                            </Hidden>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {_map(dictionary, ({ word, articleScore }) => (
+                        {_map(dictionary, ({ word, articleScore, spellScore }) => (
                             <TableRow key={word.id}>
                                 <TableCell>{index++}</TableCell>
                                 <TableCell component="th" scope="row">
@@ -72,6 +76,10 @@ class Words extends Component {
                                 <TableCell >{articleScore ? articleScore.count : '-'}</TableCell>
                                 <Hidden xsDown>
                                     <TableCell>{articleScore ? articleScore.humanViewed : '-'}</TableCell>
+                                </Hidden>
+                                <TableCell >{spellScore ? spellScore.count : '-'}</TableCell>
+                                <Hidden xsDown>
+                                    <TableCell>{spellScore ? spellScore.humanViewed : '-'}</TableCell>
                                 </Hidden>
                             </TableRow>
                         ))}

@@ -123,19 +123,10 @@ export const synchronizingStart = (action$, state$) => action$.pipe(
     ofType(a.DICTIONARY_SYNC),
     withLatestFrom(state$),
     switchMap(([, state]) => from(Object.values(state.dictionary)).pipe(
-        filter(item => item.word.isModified || !item.articleScore || item.articleScore.isModified),
-        mergeMap(item => {
-            const apiRequests = []
-            if (item.word.isModified) {
-                synchronizing += 1
-                apiRequests.push(api.saveWord(item.word))
-            }
-            if (item.articleScore && item.articleScore.isModified) {
-                synchronizing += 1
-                apiRequests.push(api.saveArticleScore(item.articleScore))
-            }
-            return of(...apiRequests)
-        })
+        mergeMap(entities => from(Object.values(entities))),
+        filter(entity => entity && entity.isModified),
+        tap(() => { synchronizing += 1 }),
+        map(entity => api.saveEntity(entity))
     )),
     epicErrorHandler
 );

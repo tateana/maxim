@@ -50,7 +50,6 @@ export const fetchDictItem = action$ => action$.pipe(
             if (word) {
                 return zip(of(word), ArticleService.fetchExact(word.id))
             }
-
             return YandexService.find(action.payload)
         }),
         map(wordData => {
@@ -68,11 +67,11 @@ export const fetchDictItem = action$ => action$.pipe(
                 payload
             }
         }),
-        catchError(errorObject => of({
-            type: a.FETCH_WORD_FAILED,
-            payload: errorObject.message,
-            error: true
-        })),
+        // catchError(errorObject => of({
+        //     type: a.FETCH_WORD_FAILED,
+        //     payload: errorObject.message,
+        //     error: true
+        // })),
     )),
     epicErrorHandler
 );

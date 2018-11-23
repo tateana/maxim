@@ -41,6 +41,8 @@ class YandexService {
             withCredentials: false
         }
 
+        console.log(request)
+
         return this.ajax(request).pipe(
             map(response => {
                 if (response.status === 200) {
