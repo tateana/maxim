@@ -1,1 +1,10 @@
-{}
+{
+    "eslint.autoFixOnSave": true,
+    "eslint.alwaysShowStatus": true,
+    "editor.formatOnSave": true,
+    "files.associations": {
+        ".aaa*": "javascript"
+    },
+    "files.eol": "\n",
+    "window.zoomLevel": 0,
+}
